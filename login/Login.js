@@ -1,20 +1,44 @@
+import 'react-native-gesture-handler';
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet,ActivityIndicator,Switch } from 'react-native';
 import {Container,Header,Content,Card,CardItem,
-  Text,Body,Button, Input, Item, Icon} from 'native-base';
+  Text,Body,Button, Input, Item, Icon, View} from 'native-base';
   import * as Font from 'expo-font';
 
 
 class Login extends Component{
+
+      state={switchValue:false}
+      toggleSwitch = (value) =>{
+        this.setState({switchValue:value})
+      }
+
       constructor(props){
         super(props);
         this.state={usuario:'',pass:''};
       }
+      state={showIndicator:false}
+      onButtonPress= () =>{
+        this.setState({showIndicator:true
+        }),this.props.navigation.navigate('Perfil',{pass: this.state.pass, usuario:this.state.usuario})
+      };
+
     render(){
-      const navegar= this.props.navigation;
+      
+      if(this.state.showIndicator){
+        return(
+          <View style={misEstilos.content}>
+            <ActivityIndicator size="large" color="#36FF0E"/>
+          </View>
+      
+        );
+        }else{
     return (
-    
+    <>
     <Container>
+    <Text>{this.state.switchValue?'Switch is ON':'Switch is OFF'}</Text>
+      <Switch onValueChange={this.toggleSwitch}
+      value={this.state.switchValue}/>
         <Header/>
         <Content padder contentContainerStyle = {misEstilos.content}>
           <Card>
@@ -37,13 +61,12 @@ class Login extends Component{
             </CardItem>
             <CardItem footer bordered>
             <Button primary style={misEstilos.boton1} 
-            onPress={() =>{navegar.navigate('Registro',
+            onPress={() =>{this.onButtonPress, navegar.navigate('Registro',
             {titulo:'Registro usuario',
             nombre:'David'})}}><Text>Registrate</Text></Button>
               
               <Button primary style={misEstilos.boton} 
-              onPress={() =>navegar.navigate('Perfil',
-              {pass:this.state.pass, usuario: this.state.usuario})}><Text>Iniciar Sesión</Text></Button>
+              onPress={this.onButtonPress}><Text>Iniciar Sesión</Text></Button>
               
             </CardItem>
           </Card>
@@ -51,9 +74,9 @@ class Login extends Component{
         
         </Content>
       </Container>
-    
+    </>
   );
- 
+    }
     }
 }
 
@@ -81,6 +104,12 @@ const misEstilos = StyleSheet.create({
   },
   boton1:{
     marginLeft:'0%'
+
+  },
+  switch:{
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center'
   }
 });
 
